@@ -10,6 +10,10 @@ app.get("/", function(req, res){
     res.render("index");
 });
 
+io.on('connection', function(socket){
+    console.log("User connected");    
+});
+
 http.listen(3000, function () {
 	console.log("Server started on *:3000");
 });
