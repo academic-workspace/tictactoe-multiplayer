@@ -47,12 +47,39 @@ h1 {
     background: steelblue;
 }
 
+#vote {
+    border: 1px solid #5e8dca;
+    border-radius: 50%;
+    font-weight: 900;
+    padding: 2px;
+    margin-left: 5px;
+    background: #87baff;
+    color: #1d599a;
+}
+
+#vote #votes {
+    color: #1d599a;
+}
+
+#vote #userCount {
+    color: #1d599a;
+}
+
 #result {
     width: 15%;
     display: inline-block;
     font-weight: 900;
     font-size: 20px;
     color: #00ff2f;
+}
+
+#player {
+    padding: 2px 5px;
+    border: 1px solid #5e8dca;
+    border-radius: 25%;
+    background: #87baff;
+    font-weight: 900;
+    color: #1d599a;
 }
 
 #TicTacToe {
@@ -78,3 +105,18 @@ h1 {
 #TicTacToe button:hover {
    background-color: #61788c;
 }
+
+#login {
+    text-align: center;
+}
+
+#login h1 {
+    background: none;
+    color: #97fba5;
+}
+
+#login input[type="text"]{
+    color: black;
+    text-transform: none;
+    letter-spacing: 1px;
+

@@ -1,41 +1,93 @@
 $(function() { 
     var socket = io();
+    var room;
+    var playing = false;
+    var input = $("#login input");
     var turn = 'O';
     var tiles = [];
-    
-    initTable();
-    
+    var user;
+    var votes = 0;
+    var voted = false;
+    var playerCount = 1;
+    $("#login input").keyup(function(evt){
+        if(evt.which == 13 && input.val().trim()){
+            initGame();
+            room = input.val().trim();
+            socket.emit('join room', room);
+            console.log(room);
+        }
+    });
+
     function changeTurn(){
         turn = (turn === 'O' ? 'X' : 'O');
         $("#player").text(turn);
+        $("#result").text(turn == user ? 'Your Turn' : 'Enemy is playing');
     }
     
+    function setTurn(newTurn){
+        turn = newTurn;
+        $("#player").text(turn);
+        $("#result").text(turn == user ? 'Your Turn' : 'Enemy is playing');
+    }
+
+    function checkUsers(){
+        if(playerCount == 1){
+            $("#result").text("Waiting for an enemy");
+        } else {
+            setTurn(turn);
+        }
+    }
+
     function isFree(tile){
         return tile.html() == '&nbsp;';
     }
     
+    function tilePress(tile){
+       tile.text(turn);
+       if(checkLogic() == true){
+           $("#result").text("Player " + turn + " wins!"); 
+           $("#TicTacToe button").off();
+           return true;
+       } else if (checkLogic() == 'tie'){
+           $("#result").text("The match was a tie!");
+           $("#TicTacToe button").off();
+           return true;
+       }
+       changeTurn();
+    }
+
     function main(button){
-        if(isFree(button)){
-            button.text(turn);
-            if(checkLogic() == true){
-                $("#result").text("Player " + turn + " wins!"); 
-                $("#TicTacToe button").off();
-                return true;
-            } else if (checkLogic() == 'tie'){
-                $("#result").text("The match was a tie!");
-                $("#TicTacToe button").off();
-                return true;
-            }
-            changeTurn();
+        if(isFree(button) && turn == user && playerCount > 1){
+            tilePress(button);
+            socket.emit('move', {move: 'button', id: button.attr('id'), turn: turn});
         }
     }
     
-    $("#again").click(function(){
-        turn = 'O';
+    function resetGame(){
         $("#TicTacToe button").html("&nbsp;");
         $("#result").text("");
-        initTable();
+        initGame();
+        setTurn('O');
         $("#TicTacToe button").on("click", tileClicked);
+        voted = false;
+        votes = 0;
+        $("#votes").text(votes);
+    }
+
+    function addVote(){
+        votes++;
+        $("#votes").text(votes);
+        voted = true;
+    }
+
+    function removeVote(){
+        votes--;
+        $("#votes").text(votes);
+        voted = false;
+    }
+
+    $("#again").click(function(){
+        socket.emit('move', {move: 'again'});
     });
     
     var tileClicked = function(){
@@ -44,10 +96,14 @@ $(function() {
     
     $("#TicTacToe button").click(tileClicked);
     
-    function initTable(){
+    function initGame(){
         var buttons = $("#TicTacToe button");
         tiles = [];
         while(buttons.length) tiles.push(buttons.splice(0,3));
+        $("#TicTacToe").fadeIn();
+        $("#stripe").fadeIn();
+        $("#login").remove();
+        checkUsers();
     }
     
     function checkLogic(){
@@ -87,4 +143,66 @@ $(function() {
         }
         return true;
     }
+
+    function loadTable(table){
+        console.log(table[0][0]); 
+        for(var i=0; i<table.length; i++){
+            $("#"+table[i][0]).text(table[i][1]);
+            if(i == table.length-1){
+                if(table[i][1] == 'O'){
+                   setTurn('X'); 
+                } else {
+                   setTurn('O'); 
+                }
+            }
+        }
+    }
+    
+    socket.on('player move', function(move){
+        var tilePressed = "#TicTacToe #" + move.id;
+        tilePress($(tilePressed));
+    });
+    
+    socket.on('player init', function(player){
+        user = player.char;
+    });
+
+    socket.on('load table', function(data){
+        loadTable(data);
+        console.log(data);        
+    });
+
+    socket.on('playAgain', function(){
+        resetGame();
+        socket.emit('reset table');
+    });
+
+    socket.on('voting', function(){
+        if(!voted){
+            addVote();
+        }
+    });
+
+    socket.on('user connect', function(userCount){
+        playerCount = userCount;
+        $("#userCount").text(playerCount);
+        checkUsers();
+    });
+
+    socket.on('user disconnect', function(userCount){
+        playerCount = userCount;
+        $("#userCount").text(playerCount);
+        if(voted){
+            removeVote();
+        }
+        checkUsers();
+    });
+
+    socket.on('disconnect', function(){
+        var data = {
+            room: room,
+            char: user
+        };
+        socket.emit('disconnect', data);
+    });
 });

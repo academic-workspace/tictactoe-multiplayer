@@ -9,22 +9,26 @@
     <body>
         <div id="menu">
             <h1>Tic Tac Toe</h1>
-            <div id="stripe">
-                <span>Turn: <span id="player"></span></span>
+            <div id="stripe" style="display:none;">
+                <span>Turn: <span id="player">O</span></span>
                 <span id="result"></span>
-                <button id="again">Play Again</button>
+                <button id="again">Play Again<span id="vote"><span id="votes">0</span>/<span id="userCount">1</span></span></button>
             </div>
         </div>
-        <div id="TicTacToe">
-            <button>&nbsp;</button>
-            <button>&nbsp;</button>
-            <button>&nbsp;</button>
-            <button>&nbsp;</button>
-            <button>&nbsp;</button>
-            <button>&nbsp;</button>
-            <button>&nbsp;</button>
-            <button>&nbsp;</button>
-            <button>&nbsp;</button>
+        <div id="login">
+           <h1>Room ID</h1> 
+           <input type="text" id="room"/>
+        </div>
+        <div id="TicTacToe" style="display:none;">
+            <button id="0">&nbsp;</button>
+            <button id="1">&nbsp;</button>
+            <button id="2">&nbsp;</button>
+            <button id="3">&nbsp;</button>
+            <button id="4">&nbsp;</button>
+            <button id="5">&nbsp;</button>
+            <button id="6">&nbsp;</button>
+            <button id="7">&nbsp;</button>
+            <button id="8">&nbsp;</button>
         </div>
         <script src="/socket.io/socket.io.js"></script>
         <script
