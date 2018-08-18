@@ -86,19 +86,18 @@ io.on('connection', function(socket){
     socket.on('join room', function(room){
 
         socket.join(room, () => {
-            let rooms = Object.keys(socket.rooms);
-            if(roomList.includes(rooms[1]) == false){
-                roomTable[rooms[1]] = [];
-                roomList.push(rooms[1]);
+            if(roomList.includes(room) == false){
+                roomTable[room] = [];
+                roomList.push(room);
             }
             let player = {
-                room: rooms[1],
-                char: selectChar(rooms[1]),
+                room: room,
+                char: selectChar(room),
             };
             socket.player = player;
             players.push(player);
             socket.emit('player init', socket.player);
-            if(roomTable[room].length != 0){ // the roomTable[room].length doesnt allow for rooms with numbers as id, gotta change that
+            if(roomTable[room].length != 0){ 
                 socket.emit('load table', roomTable[room]);
             }
             io.to(socket.player.room).emit('user connect', playerCount(socket.player.room));
@@ -129,7 +128,7 @@ io.on('connection', function(socket){
     });
 
     socket.on('move', function(move){
-        let room = Object.keys(socket.rooms)[1];
+        let room = socket.player.room;
         switch(move.move){
             case 'again':
                 if(socket.player.char != 'spectator'){
@@ -144,7 +143,6 @@ io.on('connection', function(socket){
             case 'button':
                 socket.in(room).broadcast.emit('player move', move);
                 roomTable[room].push(move.id+socket.player.char);
-                console.log(roomTable);
                 break;
         } 
     });
