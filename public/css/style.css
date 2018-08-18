@@ -73,6 +73,14 @@ h1 {
     color: #00ff2f;
 }
 
+#status {
+    width: 15%;
+    display: inline-block;
+    font-weight: 900;
+    font-size: 20px;
+    color: #ffa3a3;
+}
+
 #player {
     padding: 2px 5px;
     border: 1px solid #5e8dca;

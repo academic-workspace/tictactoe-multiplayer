@@ -14,28 +14,40 @@ $(function() {
             initGame();
             room = input.val().trim();
             socket.emit('join room', room);
-            console.log(room);
         }
     });
 
+    function setText(){
+        $("#player").text(turn);
+        let string = '';
+        if(user == 'spectator'){
+            string = turn+" is playing";
+        } else if (turn == user){
+            string = 'Your Turn';
+        } else {
+            string = 'Enemy is playing';
+        }
+        $("#result").text(string);
+    }
+
     function changeTurn(){
         turn = (turn === 'O' ? 'X' : 'O');
-        $("#player").text(turn);
-        $("#result").text(turn == user ? 'Your Turn' : 'Enemy is playing');
+        setText();
     }
     
     function setTurn(newTurn){
         turn = newTurn;
-        $("#player").text(turn);
-        $("#result").text(turn == user ? 'Your Turn' : 'Enemy is playing');
+        setText();
     }
 
     function checkUsers(){
-        if(playerCount == 1){
+        if(playerCount.players == 1){
             $("#result").text("Waiting for an enemy");
         } else {
             setTurn(turn);
         }
+        $("#status").text(user == 'spectator' ?  'You are a spectator' : 'You are player ' + user);
+
     }
 
     function isFree(tile){
@@ -57,7 +69,7 @@ $(function() {
     }
 
     function main(button){
-        if(isFree(button) && turn == user && playerCount > 1){
+        if(isFree(button) && turn == user && playerCount.players > 1){
             tilePress(button);
             socket.emit('move', {move: 'button', id: button.attr('id'), turn: turn});
         }
@@ -72,6 +84,7 @@ $(function() {
         voted = false;
         votes = 0;
         $("#votes").text(votes);
+        checkUsers();
     }
 
     function addVote(){
@@ -145,7 +158,6 @@ $(function() {
     }
 
     function loadTable(table){
-        console.log(table[0][0]); 
         for(var i=0; i<table.length; i++){
             $("#"+table[i][0]).text(table[i][1]);
             if(i == table.length-1){
@@ -169,7 +181,6 @@ $(function() {
 
     socket.on('load table', function(data){
         loadTable(data);
-        console.log(data);        
     });
 
     socket.on('playAgain', function(){
@@ -185,13 +196,13 @@ $(function() {
 
     socket.on('user connect', function(userCount){
         playerCount = userCount;
-        $("#userCount").text(playerCount);
+        $("#userCount").text(playerCount.players);
         checkUsers();
     });
 
     socket.on('user disconnect', function(userCount){
         playerCount = userCount;
-        $("#userCount").text(playerCount);
+        $("#userCount").text(playerCount.players);
         if(voted){
             removeVote();
         }

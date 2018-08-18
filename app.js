@@ -15,30 +15,39 @@ function selectChar(room){
     if(players.length != 0){
         for(var i=0; i<players.length; i++){
             if(players[i].room == room){
-                if(players[i].char == 'O'){
-                    console.log('X');
-                    return 'X';
+                if(playerCount(room).players < 2){
+                    if(players[i].char == 'O'){
+                        return 'X';
+                    } else {
+                        return 'O';
+                    }
                 } else {
-                    console.log('O');
-                    return 'O';
+                    return 'spectator';
                 }
             }
         }
     }
-    console.log('O');
     return 'O'; 
 }
 
 function playerCount(room){
-    let count = 0;
+    let playingCount = 0;
+    let spectatorCount = 0;
     if(players.length != 0){
         for(var i=0; i<players.length; i++){
             if(players[i].room == room){
-                count++;
+                if(players[i].char == 'spectator'){
+                    spectatorCount++;
+                } else {
+                    playingCount++;
+                }
             }
         }
     }
-    return count;
+    return {
+        players: playingCount,
+        spectators: spectatorCount
+    };
 }
 
 app.get("/", function(req, res){
@@ -65,7 +74,7 @@ io.on('connection', function(socket){
                 }
             }
             return false;
-        } else if(playerCount(socket.player.room) === 1){
+        } else if(playerCount(socket.player.room).players === 1){
             makeVote();
             return true;
         } else {
@@ -73,7 +82,6 @@ io.on('connection', function(socket){
         }
         return false;
     }
-    console.log(roomTable);    
 
     socket.on('join room', function(room){
 
@@ -90,10 +98,15 @@ io.on('connection', function(socket){
             socket.player = player;
             players.push(player);
             socket.emit('player init', socket.player);
-            if(roomTable[room].length != 0){
+            if(roomTable[room].length != 0){ // the roomTable[room].length doesnt allow for rooms with numbers as id, gotta change that
                 socket.emit('load table', roomTable[room]);
             }
             io.to(socket.player.room).emit('user connect', playerCount(socket.player.room));
+            console.log('\n              ROOM LIST');
+            console.log('--------------------------------------');
+            for(var i=0; i<roomList.length; i++){
+                console.log('Room: ' + roomList[i] + ' , Players: ' + playerCount(roomList[i]).players + ' , Spectators: ' + playerCount(roomList[i]).spectators);
+            }
         });
     });
 
@@ -102,10 +115,16 @@ io.on('connection', function(socket){
     });
     socket.on('disconnect', function(){
         if(socket.player){
+            let playerRoom = socket.player.room;
             players = players.filter(function(player){
                 return socket.player != player;
             });
             io.to(socket.player.room).emit('user disconnect', playerCount(socket.player.room));
+            if(playerCount(playerRoom).players == 0 && playerCount(playerRoom).spectators == 0){
+                roomList = roomList.filter(function(room){
+                    return socket.player.room != room;
+                });
+            }
         }
     });
 
@@ -113,11 +132,13 @@ io.on('connection', function(socket){
         let room = Object.keys(socket.rooms)[1];
         switch(move.move){
             case 'again':
-                if(playAgain()){
-                    io.in(room).emit('playAgain');
-                    votes = [];
-                } else {
-                    io.in(room).emit('voting');
+                if(socket.player.char != 'spectator'){
+                    if(playAgain()){
+                        io.in(room).emit('playAgain');
+                        votes = [];
+                    } else {
+                        io.in(room).emit('voting');
+                    }
                 }
                 break;
             case 'button':
