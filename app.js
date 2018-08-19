@@ -2,6 +2,8 @@ var express = require('express');
 var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+const path = require('path')
+const PORT = process.env.PORT || 5000
 
 app.set("view engine", "ejs");
 app.use(express.static("public"));
@@ -148,6 +150,6 @@ io.on('connection', function(socket){
     });
 });
 
-http.listen(3000, function () {
-	console.log("Server started on *:3000");
+http.listen(PORT, function () {
+	console.log(`Server started on ${ PORT }`);
 });
