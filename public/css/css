@@ -1,0 +1,130 @@
+* {
+    color: #ccddff;
+    font-family: sans-serif;
+    text-transform: uppercase;
+}
+
+button {
+    outline: none;
+    cursor: pointer;
+}
+
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #3b4f61;
+}
+
+h1 {
+    padding: 20px 0;
+    margin: 0;
+    background: steelblue;
+}
+
+#menu {
+    margin: 0 auto;
+    text-align: center;
+}
+
+#stripe {
+    background: #346288;
+    height: 30px;
+}
+
+#stripe button {
+    border: none;
+    height: 100%;
+    background: #346288;
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+}
+
+#stripe button:hover {
+    background: steelblue;
+}
+
+#vote {
+    border: 1px solid #5e8dca;
+    border-radius: 50%;
+    font-weight: 900;
+    padding: 2px;
+    margin-left: 5px;
+    background: #87baff;
+    color: #1d599a;
+}
+
+#vote #votes {
+    color: #1d599a;
+}
+
+#vote #userCount {
+    color: #1d599a;
+}
+
+#result {
+    width: 15%;
+    display: inline-block;
+    font-weight: 900;
+    font-size: 20px;
+    color: #00ff2f;
+}
+
+#status {
+    width: 15%;
+    display: inline-block;
+    font-weight: 900;
+    font-size: 20px;
+    color: #ffa3a3;
+}
+
+#player {
+    padding: 2px 5px;
+    border: 1px solid #5e8dca;
+    border-radius: 25%;
+    background: #87baff;
+    font-weight: 900;
+    color: #1d599a;
+}
+
+#TicTacToe {
+   height: 500px;
+   width: 500px;
+   margin: 0 auto;
+   font-size: 0;
+   margin-top: 30px;
+}
+
+#TicTacToe button {
+   height: 33.333%;
+   width: 33.333%;
+   border: 6px solid #3b4f61;
+   font-size: 120px;
+   background: #536c82;
+   border-radius: 10%;
+   transition: all 0.3s;
+   -webkit-transition: all 0.3s;
+   -moz-transition: all 0.3s;
+}
+
+#TicTacToe button:hover {
+   background-color: #61788c;
+}
+
+#login {
+    text-align: center;
+}
+
+#login h1 {
+    background: none;
+    color: #97fba5;
+}
+
+#login input[type="text"]{
+    color: black;
+    text-transform: none;
+    letter-spacing: 1px;
+
