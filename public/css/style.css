@@ -1,6 +1,8 @@
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
 * {
-    color: #ccddff;
-    font-family: sans-serif;
+    color: white;
+    font-family: 'raleway';
     text-transform: uppercase;
 }
 
@@ -21,7 +23,7 @@ body {
 h1 {
     padding: 20px 0;
     margin: 0;
-    background: steelblue;
+    background: linear-gradient(to bottom right, #002f4b, #dc4225);
 }
 
 #menu {
