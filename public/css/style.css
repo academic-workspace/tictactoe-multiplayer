@@ -116,9 +116,9 @@ h1 {
 #TicTacToe button {
    height: 33.333%;
    width: 33.333%;
-   border: 6px solid #3b4f61;
+   border: 6px solid black;
    font-size: 120px;
-   background: #536c82;
+   background: #e2e2e2;
    border-radius: 10%;
    transition: all 0.3s;
    -webkit-transition: all 0.3s;
@@ -126,7 +126,7 @@ h1 {
 }
 
 #TicTacToe button:hover {
-   background-color: #61788c;
+   background-color: #e2e2e2;
 }
 
 #login {
