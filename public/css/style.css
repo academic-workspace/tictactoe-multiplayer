@@ -20,12 +20,12 @@ button {
 }
 
 button:hover {
-        background: #424242;
+        background: #e2e2e2;
 }
 
 button:disabled {
         cursor: default;
-        background: #494949;
+        background: #e2e2e2;
 }
 
 body, html {
@@ -34,7 +34,7 @@ body, html {
 }
 
 body {
-    background: #3b4f61;
+    background: #e2e2e2;
 }
 
 h1 {
