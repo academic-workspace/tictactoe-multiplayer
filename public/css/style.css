@@ -1,14 +1,31 @@
 @import url('https://fonts.googleapis.com/css?family=Raleway');
 
 * {
-    color: white;
+    color: black;
     font-family: 'raleway';
     text-transform: uppercase;
 }
 
+button,
+button:hover {
+        border: none;
+        color: #fff;
+        padding: 10px;
+}
+
 button {
-    outline: none;
-    cursor: pointer;
+        background: #333;
+        cursor: pointer;
+        transition: background .3s ease;
+}
+
+button:hover {
+        background: #424242;
+}
+
+button:disabled {
+        cursor: default;
+        background: #494949;
 }
 
 body, html {
@@ -23,7 +40,7 @@ body {
 h1 {
     padding: 20px 0;
     margin: 0;
-    background: linear-gradient(to bottom right, #002f4b, #dc4225);
+    background: white;
 }
 
 #menu {
